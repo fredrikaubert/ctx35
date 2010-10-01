@@ -14,7 +14,7 @@ The installation instructions are meant as a quick start, and did work for me wh
 If you are directly using your serial port on your computer you can skip this step. If you do not have an available serial port on your computer you should use a USB to serial device. Any USB-serial device should do. The installation procedure is for this product: http://www.iogear.com/product/GUC232A/
 
 ### Windows 
-(http://www.iogear.com/support/dm/driver/GUC232A#display)
+[driver](http://www.iogear.com/support/dm/driver/GUC232A#display)
 
 ### OSX 
 [http://sourceforge.net/project/showfiles.php?group_id=157692]
