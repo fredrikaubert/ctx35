@@ -8,6 +8,7 @@ import no.parasit.x10.Addressing;
 import no.parasit.x10.Command;
 import no.parasit.x10.Device;
 import no.parasit.x10.HouseCode;
+import no.parasit.x10.Transmission;
 import no.parasit.x10.UnitCode;
 import no.parasit.x10.ctx35.Ctx35Gateway;
 
@@ -29,12 +30,12 @@ public class Ctx35GatewayTest {
 //	@Ignore
 	public void testOnOffSerie() throws InterruptedException, IOException {
 		
-		gateway.transmit(new Addressing('H'), Command.all_lights_off);
-			gateway.transmit(new Addressing('H', 9,10,11), Command.on);
+		gateway.transmit(new Transmission(new Addressing('H'), Command.all_lights_off));
+			gateway.transmit(new Transmission(new Addressing('H', 9,10,11), Command.on));
 			Thread.sleep(2000);
-			gateway.transmit(new Addressing('H', 9,10,11), Command.off);
+			gateway.transmit(new Transmission(new Addressing('H', 9,10,11), Command.off));
 			Thread.sleep(2000);
-			gateway.transmit(new Addressing('H', 9,10,11), Command.on);
+			gateway.transmit(new Transmission(new Addressing('H', 9,10,11), Command.on));
 		
 		
 //		gateway.transmit(new HouseCode('H'), new UnitCode[] { new UnitCode(9), new UnitCode(10), new UnitCode(11)}, Command.off, 1);
@@ -44,8 +45,7 @@ public class Ctx35GatewayTest {
 //		gateway.transmit(new HouseCode('H'), new UnitCode[] {new UnitCode(9)}, Command.dim, 16);
 //		gateway.transmit(new Device("H9"), Command.dim);
 //		gateway.transmit(new Device("H9"), Command.dim);
-//		gateway.transmit(new Device("H9"), Command.dim);
-		
+		// gateway.transmit(new Device("H9"), Command.dim);
 
 	}
 }
