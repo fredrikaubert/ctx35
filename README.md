@@ -14,7 +14,7 @@ The installation instructions are meant as a quick start, and did work for me wh
 If you are directly using your serial port on your computer you can skip this step. If you do not have an available serial port on your computer you should use a USB to serial device. Any USB-serial device should do. The installation procedure is for this product: http://www.iogear.com/product/GUC232A/
 
 ### Windows 
-[http://www.iogear.com/support/dm/driver/GUC232A#display]
+(http://www.iogear.com/support/dm/driver/GUC232A#display)
 
 ### OSX 
 [http://sourceforge.net/project/showfiles.php?group_id=157692]
@@ -26,7 +26,7 @@ I have not tested this myself, but all new distros are supposed to have support 
 Rxtx is an API for communication with a serial- or parallel port in java. This is a provided dependency, and is expected by CTX35 api to be installed in your JVM. [[www.rxtx.org]]
 
 ### Download rxtx
-[http://rxtx.qbang.org/pub/rxtx/rxtx-2.1-7-bins-r2.zip]
+(http://rxtx.qbang.org/pub/rxtx/rxtx-2.1-7-bins-r2.zip)
 Note: Windows built in zip utility claims the file is corruped. It is not, just use a different program to unzip it. I have had success with total commander, but I guess others will also work. 
 
 ### Windows
