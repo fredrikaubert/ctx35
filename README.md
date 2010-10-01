@@ -48,12 +48,12 @@ just use a different program to unzip it. I have had success with total
 commander, but I guess others will also work. 
 
 ### Windows
-put 'rxtxSerial.dll' in 'jre\bin'
-put RXTXComm.jar in jre\lib\ext
+put `rxtxSerial.dll` in `jre\bi`
+put `RXTXComm.jar` in `jre\lib\ext`
 
 ### OSX
-put RXTXcomm.jar in  /Library/Java/Extensions
-put librxtxSerial.jnilib in /Library/Java/Extensions 
+put `RXTXcomm.jar` in  `/Library/Java/Extensions`
+put `librxtxSerial.jnilib` in `/Library/Java/Extensions` 
 
 Create the directory /var/lock, and add your user to the group uucp:
 
