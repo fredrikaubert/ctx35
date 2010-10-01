@@ -28,10 +28,6 @@ public class Ctx35Gateway implements X10Sender {
 	public void transmit(Transmission transmission) {
 		transmit(transmission.getAddressing(), transmission.getCommand(), transmission.getCommandRepeat() );
 	}
-
-	public void transmit(Addressing commandAddressing, Command command) {
-		transmit(commandAddressing, command, 1);
-	}
 	
 	
 	public void transmit(Addressing commandAddressing, Command command, Integer commandRepeat) {

@@ -22,7 +22,7 @@ public class Ctx35GatewayTest {
 	@Before
 	public void setUp() throws Exception {
 		gateway = new Ctx35Gateway();
-		gateway.setCommport("/dev/tty.PL2303-00002006");
+		gateway.setCommport("/dev/tty.PL2303-00001004");
 		gateway.init();
 	}
 
@@ -30,12 +30,12 @@ public class Ctx35GatewayTest {
 //	@Ignore
 	public void testOnOffSerie() throws InterruptedException, IOException {
 		
-		gateway.transmit(new Transmission(new Addressing('H'), Command.all_lights_off));
-			gateway.transmit(new Transmission(new Addressing('H', 9,10,11), Command.on));
+		gateway.transmit(new Transmission(new Addressing('A'), Command.all_lights_off));
+			gateway.transmit(new Transmission(new Addressing('A', 9,10,11), Command.on));
 			Thread.sleep(2000);
-			gateway.transmit(new Transmission(new Addressing('H', 9,10,11), Command.off));
+			gateway.transmit(new Transmission(new Addressing('A', 9,10,11), Command.off));
 			Thread.sleep(2000);
-			gateway.transmit(new Transmission(new Addressing('H', 9,10,11), Command.on));
+			gateway.transmit(new Transmission(new Addressing('A', 9,10,11), Command.on));
 		
 		
 //		gateway.transmit(new HouseCode('H'), new UnitCode[] { new UnitCode(9), new UnitCode(10), new UnitCode(11)}, Command.off, 1);
