@@ -48,7 +48,7 @@ just use a different program to unzip it. I have had success with total
 commander, but I guess others will also work. 
 
 ### Windows
-put `rxtxSerial.dll` in `jre\bi`
+put `rxtxSerial.dll` in `jre\bin`
 put `RXTXComm.jar` in `jre\lib\ext`
 
 ### OSX
@@ -66,7 +66,8 @@ Create the directory /var/lock, and add your user to the group uucp:
 Haven't testet this myself, read the README in rxtx download.
 
 ## See if it works
-If you downloaded the source you could run the test Ctx35GatewayTest (change comport to where you installed the CTX35 device). 
+If you downloaded the source you could run the test Ctx35GatewayTest (change 
+comport to where you installed the CTX35 device). 
 
 If you downloaded the jar (not yet released) you should run this code:
 
@@ -75,7 +76,16 @@ If you downloaded the jar (not yet released) you should run this code:
 	gateway.init();
 	gateway.transmit(new Transmission(new Addressing('A', 9,10,11), Command.on));
 
+If you would like to run the serial communication in a different thread and not
+have to worry about thread safety, wrap the gateway in an queued gateway:
 
+	Ctx35Gateway gateway = new Ctx35Gateway();
+	gateway.setCommport("COM3");
+	gateway.init();
+	QueuedCtx35Gateway queueGateway = new QueuedCtx35Gateway();
+	queueGateway.setX10Gateway(gateway);
+	queueGateway.init(); 
+	queueGateway.transmit(new Transmission(new Addressing('A', 9,10,11), Command.on));
 
 # License
 
