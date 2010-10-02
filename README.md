@@ -19,6 +19,9 @@ The installation instructions are meant as a quick start, and did work for me
 when I tested it. If you run into problems you should consult the 
 documentation/support of the product you have problems with. 
 
+In short, you need a free serial port, rxtx installed in your jvm and you are
+ready to go. 
+
 ## Install USB serial device driver
 If you are directly using your serial port on your computer you can skip this 
 step. If you do not have an available serial port on your computer you should
@@ -37,9 +40,10 @@ I have not tested this myself, but all new distros are supposed to have support
  out of the box, just plug it in. 
 
 ## Install RXTX
-Rxtx is an API for communication with a serial- or parallel port in java. This
-is a provided dependency, and is expected by CTX35 api to be installed in your
-JVM. [[www.rxtx.org]]
+[Rxtx](www.rxtx.org) is an API for communication with a serial- or parallel 
+port in java. This is a provided dependency, and is expected by CTX35 api to
+be installed in your JVM.
+
 
 ### Download rxtx
 [Download link](http://rxtx.qbang.org/pub/rxtx/rxtx-2.1-7-bins-r2.zip)
