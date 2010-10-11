@@ -3,6 +3,8 @@ package no.parasit.x10.ctx35;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.omg.CORBA.portable.ResponseHandler;
+
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
 import no.parasit.x10.Addressing;
@@ -14,38 +16,29 @@ import no.parasit.x10.UnitCode;
 import no.parasit.x10.X10Sender;
 import no.parasit.x10.ctx35.responsehandlers.OkMessageCtxResponseHandler;
 
-public class Ctx35Gateway implements X10Sender {
+public class Ctx35Gateway implements Ctx35GatewayInterface {
 
 	private Ctx35SerialTransmitter ctx35SerialTransmitter = new Ctx35SerialTransmitter();
-	private Ctx35TransmissionCreator ctx35TransmissionCreator = new Ctx35TransmissionCreator();
+	
 	private int numberOfRetries = 3;
-	Ctx35ResponseHandler[] responseHandlers = new Ctx35ResponseHandler[] {
-		new OkMessageCtxResponseHandler(),
-	};
+
 	
 	
 	
-	public void transmit(Transmission transmission) {
-		transmit(transmission.getAddressing(), transmission.getCommand(), transmission.getCommandRepeat() );
-	}
 	
-	
-	public void transmit(Addressing commandAddressing, Command command, Integer commandRepeat) {
+	public void transmit(String transmission, Ctx35ResponseHandler responseHandler) {
 		int remainingRetries = numberOfRetries;
 		String response = null;
 		boolean responseAccepted;
 		do {
 			try {
-				String transmission = ctx35TransmissionCreator.createTransmission(commandAddressing, command, commandRepeat == null ? 1 : commandRepeat);
 				response = ctx35SerialTransmitter.transmit(transmission);
-				responseAccepted = false;
-				for (Ctx35ResponseHandler handler : responseHandlers) {
-					if( handler.canHandleResponse(response)) {
-						handler.handleResponse(response);
-						responseAccepted = true;
-						break;
-					}
+				System.out.println("transmission:" + transmission +  " response:" + response);
+				responseAccepted = responseHandler.canHandleResponse( response );
+				if( responseAccepted) {
+					responseHandler.handleResponse( response );
 				}
+				
 			} catch (Ctx35ReadException e) {
 				responseAccepted = false;
 				response = null;

@@ -2,6 +2,7 @@ package no.parasit.x10.ctx35;
 
 import no.parasit.x10.Addressing;
 import no.parasit.x10.Command;
+import no.parasit.x10.Transmission;
 import no.parasit.x10.UnitCode;
 
 public class Ctx35TransmissionCreator {
@@ -10,7 +11,7 @@ public class Ctx35TransmissionCreator {
 	private Ctx35CheckSumCalculator ctx35CheckSumCalculator = new Ctx35CheckSumCalculator();
 	private Ctx35CommandTranslator ctx35CommandTranslator = new Ctx35CommandTranslator();
 	
-
+	@Deprecated//Should use transmission instead
 	public String createTransmission(Addressing addressing, Command command, int commandRepeat) {
 		if( command.isRequiresUnitCode() && addressing.getUnitCodes().length == 0) {
 			throw new IllegalArgumentException("Command '" + command + "' requires alt least one unitcode. Addressing is:" + addressing);
@@ -46,5 +47,10 @@ public class Ctx35TransmissionCreator {
 			unit = "0" + unit;
 		}
 		return unit;
+	}
+
+	public String createTransmission(Transmission transmission)
+	{
+		return createTransmission( transmission.getAddressing(), transmission.getCommand(), transmission.getCommandRepeat() );
 	}
 }

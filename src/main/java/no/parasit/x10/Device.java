@@ -7,40 +7,59 @@ package no.parasit.x10;
  * 
  */
 
-@Deprecated
+
 public class Device {
-	private char house;
-	private int unit;
-
-	public Device(String houseCodeAndUnitCode) {
-		setHouseCode(houseCodeAndUnitCode.substring(0, 1).toUpperCase());
-		setUnitCode(houseCodeAndUnitCode.substring(1));
-
+	HouseCode houseCode;
+	UnitCode unitCode;
+	public HouseCode getHouseCode()
+	{
+		return houseCode;
 	}
-
-	private void setUnitCode(String unitCode) {
-		int unit = Integer.parseInt(unitCode);
-		if (unit < 1 || unit > 16) {
-			throw new IllegalArgumentException("Unit code must be between 1 and 16");
-		}
-		this.unit = unit;
-
+	public UnitCode getUnitCode()
+	{
+		return unitCode;
 	}
-
-	private void setHouseCode(String houseCode) {
-		char house = houseCode.charAt(0);
-		if (house < 'A' || house > 'P') {
-			throw new IllegalArgumentException("House code must be between A and P");
-		}
-		this.house = house;
+	public Device(HouseCode houseCode, UnitCode unitCode)
+	{
+		super();
+		this.houseCode = houseCode;
+		this.unitCode = unitCode;
 	}
-
-	public char getHouse() {
-		return house;
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((houseCode == null) ? 0 : houseCode.hashCode());
+		result = prime * result + ((unitCode == null) ? 0 : unitCode.hashCode());
+		return result;
 	}
-
-	public int getUnit() {
-		return unit;
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Device other = (Device) obj;
+		if (houseCode == null)
+		{
+			if (other.houseCode != null)
+				return false;
+		} else if (!houseCode.equals( other.houseCode ))
+			return false;
+		if (unitCode == null)
+		{
+			if (other.unitCode != null)
+				return false;
+		} else if (!unitCode.equals( other.unitCode ))
+			return false;
+		return true;
 	}
+	
+	
 
 }

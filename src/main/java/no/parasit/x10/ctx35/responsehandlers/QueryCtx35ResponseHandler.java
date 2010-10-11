@@ -15,6 +15,7 @@ public class QueryCtx35ResponseHandler implements Ctx35ResponseHandler {
 
 	@Override
 	public void handleResponse(String response) {
+		System.out.println("RESPONSE:" + response);
 		queryResponseParser.parseResponse(response);
 		
 	}

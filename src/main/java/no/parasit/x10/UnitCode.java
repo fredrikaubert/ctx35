@@ -12,7 +12,7 @@ public class UnitCode {
 	}
 	
 	private void setUnitCode(int unitCode) {
-		if (unitCode < 1 || unitCode > 16) {
+		if ( !isUnitCode( unitCode )) {
 			throw new IllegalArgumentException("Unit code must be between 1 and 16");
 		}
 		this.unitCode = unitCode;
@@ -26,4 +26,17 @@ public class UnitCode {
 	public String toString() {
 		return "unitCode=" + unitCode;
 	}
+	
+	public static boolean isUnitCode(int unitCodeCandidate) {
+		return !(unitCodeCandidate < 1 || unitCodeCandidate > 16);
+	}
+	
+	public static boolean isUnitCode(String unitCodeCandidate) {
+		try {
+			return isUnitCode( Integer.parseInt( unitCodeCandidate ) );
+		} catch( NumberFormatException e ) {
+			return false;
+		}
+	}
+	
 }

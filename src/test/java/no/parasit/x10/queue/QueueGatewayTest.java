@@ -3,7 +3,7 @@ package no.parasit.x10.queue;
 import no.parasit.x10.Addressing;
 import no.parasit.x10.Command;
 import no.parasit.x10.Transmission;
-import no.parasit.x10.queue.QueuedCtx35Gateway;
+import no.parasit.x10.ctx35.queue.QueuedCtx35Gateway;
 
 import org.junit.Test;
 

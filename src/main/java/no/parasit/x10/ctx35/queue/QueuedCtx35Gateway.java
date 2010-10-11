@@ -1,4 +1,4 @@
-package no.parasit.x10.queue;
+package no.parasit.x10.ctx35.queue;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -7,7 +7,9 @@ import no.parasit.x10.Addressing;
 import no.parasit.x10.Command;
 import no.parasit.x10.Transmission;
 import no.parasit.x10.X10Sender;
-import no.parasit.x10.ctx35.Ctx35Gateway;
+import no.parasit.x10.ctx35.Ctx35GatewayInterface;
+import no.parasit.x10.ctx35.Ctx35TransmissionCreator;
+import no.parasit.x10.ctx35.responsehandlers.OkMessageCtxResponseHandler;
 
 /**
  * Proxys a Ctx35Gateway and provides a queue on which to put X10 command
@@ -20,18 +22,20 @@ import no.parasit.x10.ctx35.Ctx35Gateway;
  */
 public class QueuedCtx35Gateway implements X10Sender {
 
-	private X10Sender x10Gateway;
+	private Ctx35GatewayInterface x10Gateway;
 	private BlockingQueue<CommandTransmission> transmissionQueue = new LinkedBlockingQueue<CommandTransmission>();
+	private Ctx35TransmissionCreator ctx35TransmissionCreator = new Ctx35TransmissionCreator();
 
 	@Override
 	public void transmit(Transmission transmission) {
 		try {
-			transmissionQueue.put(new CommandTransmission(transmission.getAddressing(), transmission.getCommand(), transmission.getCommandRepeat()));
+			transmissionQueue.put( new CommandTransmission( ctx35TransmissionCreator.createTransmission( transmission ), new OkMessageCtxResponseHandler()) );
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
-
 	}
+	
+	
 
 
 	public void init() {
@@ -41,21 +45,22 @@ public class QueuedCtx35Gateway implements X10Sender {
 				try {
 					while (true) {
 						CommandTransmission commandTransmission = transmissionQueue.take();
-						Addressing addressing = commandTransmission.getAddressing();
-						Command command = commandTransmission.getCommand();
-						int commandRepeat = commandTransmission.getCommandRepeat();
-						x10Gateway.transmit(new Transmission(addressing, command, commandRepeat));
+						x10Gateway.transmit(commandTransmission.getTransmission(), commandTransmission.getResponseHandler());
 					}
 				} catch (InterruptedException e) {
 					throw new RuntimeException(e);
 				}
 
 			}
-		}).start();
+		}, "Ctx35-Thread").start();
 	}
 
-	public void setX10Gateway(X10Sender x10Gateway) {
+	public void setX10Gateway(Ctx35GatewayInterface x10Gateway) {
 		this.x10Gateway = x10Gateway;
+	}
+	
+	public BlockingQueue<CommandTransmission> getQueue() {
+		return transmissionQueue;
 	}
 
 }

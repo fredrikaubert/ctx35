@@ -36,7 +36,21 @@ public class CtxQueryResponseParserTest {
 		String response = "$<2800! P01P01 PONPON P02P02 PBGTPBGTPBGTPBGTPBGTPBGTPBGT P03P03 POFFPOFF P04P04 PDIMPDIMPDIMPDIMPDIMPDIM47#";
 		List<Transmission> transmissions = responseParser.parseResponse(response);
 		
-		
 	}
+	
+//	@Test
+	public void testParseResonse() {
+//		Does not conform to protocol, perhaps should parser be stateful to handle these cases (this is in fact a real readout)
+		String response = "$<2800! C08 A02 F06 HON HALF H08 H09 H10 H11 HON H08 H09 H10 H11 HOFF H08 H09 H10 H11 HON H11H11 HOFFHOFF H11H11 HONHON HALF H08 H09 H10 H11 HON H08 H09 H10 H11 HOFF H08 H09 H10 H11 HON H11H11 HOFFHOFF H11H11 HONHON HALF H08 H09 H10 H11 HON H08 H09 H10 H11 HOFF H08 H09 H10 H11 HON H11H11 HOFFHOFF H11H11 HONHON                                                                BE#";
+		responseParser.parseResponse( response );
+	}
+	@Test
+	public void testYetAnotherResponse() {
+		String response = "$<2800! H08 H09 H10 H11 HON H08 H09 H10 H11 HOFF H08 H09 H10 H11 HON H11H11 HOFFHOFF H11H11 HONHON6C#";
+		List<Transmission> transmissions = responseParser.parseResponse(response);
+		assertEquals(5, transmissions.size());
+	}
+	
+	
 	
 }

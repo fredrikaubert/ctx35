@@ -2,11 +2,13 @@ package no.parasit.x10.ctx35;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import no.parasit.x10.Addressing;
 import no.parasit.x10.Command;
+import no.parasit.x10.Device;
 import no.parasit.x10.HouseCode;
 import no.parasit.x10.Transmission;
 import no.parasit.x10.UnitCode;
@@ -47,71 +49,60 @@ public class Ctx35QueryResponseParser
 
 		String data = response.substring( "$<2800! ".length(),
 				response.length() - 3 );
-		String[] dataParts = data.split( " " );
-		System.out.println( "dataparts=" + dataParts );
-
-		Addressing addressing = null;
-		for (int i = 0; i < dataParts.length; i++)
+		String[] stringTokens = data.split( " " );
+		
+		List<ResponseToken> tokens = new LinkedList<ResponseToken>();
+		for (String string : stringTokens)
 		{
-			String dataPart = dataParts[i];
-			if (i % 2 == 0)// addressinformation:
-			{
-				if (dataPart.length() % 3 != 0)
-				{
-					// doesnt match 3 letter addressing. This is mysterious
-					throw new RuntimeException(
-							"Doesn't match addess pattern. dataPart[" + i + "]="
-									+ dataPart + " response=" + response );
-				}
-
-				Set<String> devices = new HashSet<String>();
-
-				for (int t = 0; t < dataPart.length() / 3; t++)
-				{
-					String device = dataPart.substring( t * 3, t * 3 + 3 );
-					System.out.println( "device" + device );
-					devices.add( device );
-				}
-				Set<String> houseCodes = new HashSet<String>();
-				HouseCode houseCode = null;
-				Set<UnitCode> unitCodes = new HashSet<UnitCode>();
-				for (String string : devices)
-				{
-					houseCodes.add( string.substring( 0, 1 ) );
-					houseCode = new HouseCode( string.charAt( 0 ) );
-					unitCodes.add(new UnitCode( string.substring( 2 ) ));
-				}
-				if( houseCodes.size() != 1) {
-					throw new RuntimeException("There can be only one housecode pr transmission. If the current result is legal, we must change implementation. Housecodes.size:" + houseCodes.size());
+			tokens.add( new ResponseToken( string ) );
+		}
+		
+		List<Device> devices = new LinkedList<Device>();
+		for (ResponseToken token : tokens)
+		{
+			if(token.isDevice()) {
+				devices.add( token.getDevice() );
+			}
+			if(token.isCommand()) {
+				Command command = token.getCommand();
+				if(command.isRequiresUnitCode()) {
+					List<Device> matchingDevices = removeAllDevicesWithUnitCode(token.getHouseCode(), devices);
+					if(matchingDevices.size() == 0) {
+						throw new RuntimeException("Command " + command + "(token:" + token.getString() + ") requires addressing, but no matching devices found. Have allready created " + transmissions.size() + " transmissions");
+					} 
+					UnitCode[] unitCodes = new UnitCode[matchingDevices.size()];
+					int i = 0;
+					for (Device device : matchingDevices)
+					{
+						unitCodes[i++] = device.getUnitCode();
+					}
+					Addressing addressing = new Addressing( matchingDevices.get( 0 ).getHouseCode(), unitCodes );
+					Transmission transmission = new Transmission( addressing, command, token.getCommandRepeat() );
+					transmissions.add( transmission );
+				} else {
+					transmissions.add(new Transmission( new Addressing( token.getHouseCode()), command ));
 				}
 				
-				addressing = new Addressing( houseCode, unitCodes.toArray( new UnitCode[0] ));
-				
-
-			} else
-			{
-				
-				// TODO: Bruteforcing is not too elegant:
-				Command command = commandTranslator.fromCtx35Command( dataPart.substring( 1, 3 ) );
-				int commandRepeat = dataPart.length() / 3 ;
-				
-				if (command == null)
-				{
-					command = commandTranslator.fromCtx35Command( dataPart.substring( 1, 4 ) );
-					commandRepeat = dataPart.length() / 4 ;
-				}
-
-				if (command == null)
-				{
-					throw new RuntimeException("Cannot extract command from dataPart:" + dataPart + " response=" + response );
-				}
-				
-				transmissions.add( new Transmission( addressing, command, commandRepeat )); //TODO 1 in hardcoded, this is wrong
-				addressing = null;
 			}
 		}
-
+		
+		if(devices.size() != 0) {
+			System.out.println("WARNING: got " + devices.size() + " device leftovers, not assosiated to a command:" + devices);
+		}
 		return transmissions;
 
+	}
+
+	private List<Device> removeAllDevicesWithUnitCode(HouseCode houseCode, List<Device> devices)
+	{
+		List<Device> matchingDevices = new LinkedList<Device>();
+		for (Device device : devices)
+		{
+			if(houseCode.equals( device.getHouseCode())) {
+				matchingDevices.add(device);
+			}
+		}
+		devices.removeAll( matchingDevices );
+		return matchingDevices;
 	}
 }
