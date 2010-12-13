@@ -59,6 +59,11 @@ public class Device {
 			return false;
 		return true;
 	}
+	@Override
+	public String toString()
+	{
+		return "Device [" + houseCode + ", " + unitCode + "]";
+	}
 	
 	
 

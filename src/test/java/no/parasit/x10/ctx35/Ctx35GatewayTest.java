@@ -1,6 +1,8 @@
 package no.parasit.x10.ctx35;
 
 import java.io.IOException;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import no.parasit.x10.Addressing;
 import no.parasit.x10.Command;
@@ -23,10 +25,25 @@ public class Ctx35GatewayTest {
 		g.setCommport("/dev/tty.PL2303-00002006");
 		g.init();
 		gateway.setX10Gateway(g);
-		gateway.init();
 	}
 
+	
 	@Test
+	public void readTransmissions() throws InterruptedException {
+		System.out.println("Starting");
+		LinkedBlockingQueue<Transmission> responses = new LinkedBlockingQueue<Transmission>();
+		gateway.setResponseQueue( responses );
+		gateway.init();
+//		gateway.transmit(new Transmission(new Addressing('H'), Command.all_lights_off));
+		for (int i = 0; i < 10; i++)
+		{
+			System.out.println(responses.take());
+		}
+		
+	}
+	
+	
+//	@Test
 //	@Ignore
 	public void testOnOffSerie() throws InterruptedException, IOException {
 //		{
@@ -36,15 +53,15 @@ public class Ctx35GatewayTest {
 //			gateway.getQueue().add( new CommandTransmission( transmission, new OkMessageCtxResponseHandler() ) );
 //		}
 		
+		gateway.init();
 		
+//		Thread.sleep(10000);
+//		String transmission = "$>280000";
+//		transmission += new Ctx35CheckSumCalculator().calculate( transmission );
+//		transmission +="#";
+//		gateway.getQueue().add( new CommandTransmission( transmission, new QueryCtx35ResponseHandler(new LinkedBlockingQueue<Transmission>()) ) );
 		
-		Thread.sleep(10000);
-		String transmission = "$>280000";
-		transmission += new Ctx35CheckSumCalculator().calculate( transmission );
-		transmission +="#";
-		gateway.getQueue().add( new CommandTransmission( transmission, new QueryCtx35ResponseHandler() ) );
-		
-		Thread.sleep(10000);
+//		Thread.sleep(10000);
 		gateway.transmit(new Transmission(new Addressing('H'), Command.all_lights_off));
 		gateway.transmit(new Transmission(new Addressing('H',8, 9,10,11), Command.on));
 		Thread.sleep(2000);

@@ -22,6 +22,8 @@ public class Ctx35QueryResponseParser
 
 	private Ctx35CommandTranslator commandTranslator = new Ctx35CommandTranslator();
 
+	private List<ResponseToken> tokens = new LinkedList<ResponseToken>();
+
 	public List<Transmission> parseResponse(String response)
 	{
 		List<Transmission> transmissions = new ArrayList<Transmission>();
@@ -51,7 +53,6 @@ public class Ctx35QueryResponseParser
 				response.length() - 3 );
 		String[] stringTokens = data.split( " " );
 		
-		List<ResponseToken> tokens = new LinkedList<ResponseToken>();
 		for (String string : stringTokens)
 		{
 			tokens.add( new ResponseToken( string ) );

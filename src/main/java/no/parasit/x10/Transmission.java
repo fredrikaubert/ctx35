@@ -37,6 +37,33 @@ public class Transmission
 	{
 		return commandRepeat;
 	}
+
+
+	public void setAddressing(Addressing addressing)
+	{
+		this.addressing = addressing;
+	}
+
+
+	public void setCommand(Command command)
+	{
+		this.command = command;
+	}
+
+
+	public void setCommandRepeat(int commandRepeat)
+	{
+		this.commandRepeat = commandRepeat;
+	}
+
+
+	@Override
+	public String toString()
+	{
+		return "Transmission [addressing=" + addressing + ", command=" + command
+				+ ", commandRepeat=" + commandRepeat + "]";
+	}
+	
 	
 	
 	
